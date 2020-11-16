@@ -29,7 +29,7 @@
   </ul>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="{{ route('supplier.index') }}">
         <i class="material-icons icon">assignment</i>
         <span>List Supplier</span>
       </a>
@@ -37,7 +37,7 @@
   </ul>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="{{ route('category.index') }}">
         <i class="material-icons icon">assignment</i>
         <span>List Category</span>
       </a>
@@ -45,35 +45,10 @@
   </ul>
   <ul class="nav flex-column">
     <li class="nav-item">
-      <a class="nav-link" href="#">
-        <i class="material-icons icon">assignment</i>
-        <span>List Sub Category</span>
-      </a>
-    </li>
-  </ul>
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="{{ route('product.index') }}">
         <i class="material-icons icon">assignment</i>
         <span>List Product</span>
       </a>
     </li>
   </ul>
-  <ul class="nav flex-column">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="javascript:void(0)">
-        <i class="material-icons icon">dashboard</i>
-        <span>Dashboard</span>
-        <i class="material-icons arrow">expand_more</i>
-      </a>
-      <div class="nav flex-column">
-        <div class="nav-item">
-          <a class="nav-link" href="#">
-            <span>Production</span>
-          </a>
-        </div>
-      </div>
-    </li>
-  </ul>
-  <!-- Navigation menu sidebar ends -->
 </div>

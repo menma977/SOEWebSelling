@@ -32,7 +32,7 @@ class UserController extends Controller
     if ($filter) {
       $users = User::where('username', 'like', "%" . $filter . "%")->orWhere('name', 'like', "%" . $filter . "%")->get();
     } else {
-      $users = User::take(50)->get();
+      $users = User::take(100)->get();
     }
     $users->map(function ($item) {
       if ($item->img) {
@@ -49,7 +49,6 @@ class UserController extends Controller
    */
   public function create()
   {
-
     return view('user.create');
   }
 

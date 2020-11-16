@@ -7,14 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Category
+ * Class Sell
  * @package App\Models
  * @property integer id
- * @property string name
+ * @property integer product
+ * @property string description
+ * @property integer debit
+ * @property  integer credit
  */
-class Category extends Model
+class Sell extends Model
 {
-    use HasFactory, SoftDeletes;
+  use HasFactory, SoftDeletes;
 
   /**
    * The attributes that are mass assignable.
@@ -22,6 +25,9 @@ class Category extends Model
    * @var array
    */
   protected $fillable = [
-    'name',
+    'product',
+    'description',
+    'debit',
+    'credit',
   ];
 }

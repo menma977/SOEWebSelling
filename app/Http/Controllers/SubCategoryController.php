@@ -2,84 +2,98 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\SubCategory;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class SubCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Application|Factory|View|Response
+   */
+  public function index()
+  {
+    $category = Category::all();
+
+    $data = [
+      'category' => $category
+    ];
+
+    return view('category.sub.index', $data);
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param Request $request
+   * @param string $id
+   * @return RedirectResponse|Response
+   * @throws ValidationException
+   */
+  public function store(Request $request, $id = "")
+  {
+    if ($id) {
+      $this->validate($request, [
+        'category' => 'required|integer|exists:categories,id',
+        'name' => 'required|string',
+      ]);
+      $category = SubCategory::find($id);
+      $category->category = $request->category;
+      $category->name = $request->name;
+      $category->save();
+    } else {
+      $this->validate($request, [
+        'category' => 'required|integer|exists:categories,id',
+        'name' => 'required|string',
+      ]);
+      $category = new SubCategory();
+      $category->category = $request->category;
+      $category->name = $request->name;
+      $category->save();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    return redirect()->back();
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param string $filter
+   * @return JsonResponse|Response
+   */
+  public function show($filter = "")
+  {
+    if ($filter) {
+      $data = SubCategory::where('name', 'like', "%" . $filter . "%")->get();
+    } else {
+      $data = SubCategory::take(100)->get();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    $data->map(function ($item) {
+      $item->category = Category::withTrashed()->find($item->category)->name;
+    });
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SubCategory  $subCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SubCategory $subCategory)
-    {
-        //
-    }
+    return response()->json($data, 200);
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SubCategory  $subCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SubCategory $subCategory)
-    {
-        //
-    }
+  /**
+   * @param $id
+   * @return RedirectResponse
+   * @throws \Exception
+   */
+  public function destroy($id)
+  {
+    SubCategory::deleted($id);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SubCategory  $subCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, SubCategory $subCategory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SubCategory  $subCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(SubCategory $subCategory)
-    {
-        //
-    }
+    return redirect()->back();
+  }
 }

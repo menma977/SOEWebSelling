@@ -7,19 +7,19 @@
         <nav class="navbar col-12">
           <div class="dropdown mr-auto d-flex d-sm-none">
             <button class="btn dropdown-toggle btn-sm btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              User
+              Supplier
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item {{ request()->is(['user']) ? 'active' : '' }}" href="{{ route('user.index') }}">Index</a>
-              <a class="dropdown-item {{ request()->is(['user/*']) ? 'active' : '' }}" href="{{ route('user.store') }}">Create/Edit</a>
+              <a class="dropdown-item {{ request()->is(['product']) ? 'active' : '' }}" href="{{ route('product.index') }}">Index</a>
+              <a class="dropdown-item {{ request()->is(['product/*']) ? 'active' : '' }}" href="{{ route('product.store') }}">Create/Edit</a>
             </div>
           </div>
           <ul class="nav nav-pills mr-auto d-none d-sm-flex">
             <li class="nav-item ">
-              <a class="nav-link {{ request()->is(['user']) ? 'active' : '' }}" href="{{ route('user.index') }}">Index</a>
+              <a class="nav-link {{ request()->is(['product']) ? 'active' : '' }}" href="{{ route('product.index') }}">Index</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ request()->is(['user/*']) ? 'active' : '' }}" href="{{ route('user.store') }}">Create/Edit</a>
+              <a class="nav-link {{ request()->is(['product/*']) ? 'active' : '' }}" href="{{ route('product.store') }}">Create/Edit</a>
             </li>
           </ul>
           <div class="form-inline ml-auto ml-sm-3">
@@ -48,9 +48,9 @@
         <thead>
         <tr>
           <th style="width:5px">ID</th>
-          <th style="width:250px">Name</th>
-          <th style="width:50px">Username</th>
-          <th style="width:50px">Action</th>
+          <th style="width:150px">Product</th>
+          <th style="width:50px">Edit</th>
+          <th style="width:50px">Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -59,18 +59,24 @@
             <td class="id"></td>
             <td>
               <div class="media">
-                <figure class="avatar avatar-40 mr-2">
+                <figure class="avatar avatar-100 mr-2">
                   <img class="img" src="{{ asset('##img##') }}" alt="image">
                 </figure>
                 <div class="media-body">
                   <p class="name text-template-primary-light"></p>
+                  <p class="supplier text-template-primary-light"></p>
+                  <p class="sub_category text-template-primary-light"></p>
                 </div>
               </div>
             </td>
-            <td class="username"></td>
             <td>
-              <a class="detail btn btn-primary btn-sm btn-block" href="{{ route('user.update', '##username##') }}">
+              <a class="edit btn btn-primary btn-sm btn-block" href="{{ route('product.update', '##username##') }}">
                 EDIT
+              </a>
+            </td>
+            <td>
+              <a class="btn btn-danger btn-sm btn-block delete" href="{{ route('product.destroy', '##id##') }}">
+                Delete
               </a>
             </td>
           </tr>
@@ -94,7 +100,7 @@
       if (e)
         e.preventDefault();
       const filter = document.getElementById('search-user').value;
-      const response = await fetch("{{ route('user.filter', '##filter##') }}".replace("##filter##", filter), {
+      const response = await fetch("{{ route('product.filter', '##filter##') }}".replace("##filter##", filter), {
         method: 'GET',
         headers: {
           Accept: "application/json",
@@ -102,19 +108,18 @@
         }
       });
       if (response && response.ok) {
-        const users = await response.json();
+        const dataset = await response.json();
         const old_tbody = table.querySelector("tbody");
         const new_tbody = document.createElement('tbody');
-        for (const user of users) {
-          // console.log(user)
+        for (const data of dataset) {
           const newRow = row.cloneNode(true);
-          newRow.querySelector(".id").innerText = user.id;
-          newRow.querySelector(".name").innerText = user.name;
-          newRow.querySelector(".username").innerText = user.username;
-          if (user.img) {
-            newRow.querySelector(".img").src = user.img
-          }
-          newRow.querySelector(".detail").href = newRow.querySelector(".detail").href.replace("##username##", user.id)
+          newRow.querySelector(".id").innerText = data.id;
+          newRow.querySelector(".img").src = data.img;
+          newRow.querySelector(".name").innerText = data.name;
+          newRow.querySelector(".supplier").innerText = data.supplier;
+          newRow.querySelector(".sub_category").innerText = data.sub_category;
+          newRow.querySelector(".edit").href = newRow.querySelector(".edit").href.replace("##username##", data.id)
+          newRow.querySelector(".delete").href = newRow.querySelector(".delete").href.replace("##id##", data.id)
           new_tbody.appendChild(newRow);
         }
         if (old_tbody)

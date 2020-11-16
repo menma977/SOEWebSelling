@@ -17,12 +17,10 @@ class CreateProductsTable extends Migration
       $table->id();
       $table->text('img');
       $table->string('name');
-      $table->string('description');
-      $table->integer('debit');
-      $table->integer('credit');
       $table->bigInteger("supplier");
       $table->bigInteger("sub_category");
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

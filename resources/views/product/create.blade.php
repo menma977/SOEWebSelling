@@ -7,19 +7,19 @@
         <nav class="navbar col-12">
           <div class="dropdown mr-auto d-flex d-sm-none">
             <button class="btn dropdown-toggle btn-sm btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              User
+              Supplier
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item {{ request()->is(['user']) ? 'active' : '' }}" href="{{ route('user.index') }}">Index</a>
-              <a class="dropdown-item {{ request()->is(['user/*']) ? 'active' : '' }}" href="{{ route('user.store') }}">Create/Edit</a>
+              <a class="dropdown-item {{ request()->is(['product']) ? 'active' : '' }}" href="{{ route('product.index') }}">Index</a>
+              <a class="dropdown-item {{ request()->is(['product/*']) ? 'active' : '' }}" href="{{ route('product.store') }}">Create/Edit</a>
             </div>
           </div>
           <ul class="nav nav-pills mr-auto d-none d-sm-flex">
             <li class="nav-item ">
-              <a class="nav-link {{ request()->is(['user']) ? 'active' : '' }}" href="{{ route('user.index') }}">Index</a>
+              <a class="nav-link {{ request()->is(['product']) ? 'active' : '' }}" href="{{ route('product.index') }}">Index</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ request()->is(['user/*']) ? 'active' : '' }}" href="{{ route('user.store') }}">Create/Edit</a>
+              <a class="nav-link {{ request()->is(['product/*']) ? 'active' : '' }}" href="{{ route('product.store') }}">Create/Edit</a>
             </li>
           </ul>
           <div class="form-inline ml-auto ml-sm-3">
@@ -37,53 +37,49 @@
   <div class="row">
     <div class="col-12 col-md-11 col-lg-10 col-xl-8 mx-auto align-self-center">
       <div class="card shadow-sm border-0 mb-4">
-        <form enctype="multipart/form-data" action="{{ route('user.store') }}" method="POST">
+        <form enctype="multipart/form-data" action="{{ route('product.store') }}" method="POST">
           @csrf
           <div class="card-body">
             <div class="row justify-content-center">
               <div class="col-md-10 mx-auto">
-                <h5 class="m-0">Create New User</h5>
+                <h5 class="m-0">Create New Product</h5>
                 <hr>
                 <div class="form-group row">
                   <div class="col-lg-6 col-md-6">
-                    <label for="_name">Name</label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="_name" value="{{ old('name')}}">
-                    @error('name')
+                    <label for="_supplier">Supplier</label>
+                    <select class="form-control @error('sub_category') is-invalid @enderror" name="supplier" id="_supplier">
+                      @foreach($supplier as $item)
+                        <option value="{{ $item->id }}" {{ old('supplier') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                      @endforeach
+                    </select>
+                    @error('supplier')
                     <div class="alert alert-danger" role="alert">
                       {{ $message }}
                     </div>
                     @enderror
                   </div>
                   <div class="col-lg-6 col-md-6">
-                    <label for="_username">Username</label>
-                    <input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="_username" value="{{ old('username')}}">
-                    @error('username')
+                    <label for="_sub_category">Category</label>
+                    <select class="form-control @error('sub_category') is-invalid @enderror" name="sub_category" id="_sub_category">
+                      @foreach($subCategory as $item)
+                        <option value="{{ $item->id }}" {{ old('sub_category') == $item->id ? 'selected' : '' }}>{{ $item->category->name }} - {{ $item->name }}</option>
+                      @endforeach
+                    </select>
+                    @error('sub_category')
                     <div class="alert alert-danger" role="alert">
                       {{ $message }}
                     </div>
                     @enderror
                   </div>
                 </div>
-                <div class="form-group row">
-                  <div class="col-lg-6 col-md-6">
-                    <label for="_password">Password</label>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="_password" value="{{ old('password') }}">
-                    @error('password')
-                    <div class="alert alert-danger" role="alert">
-                      {{ $message }}
-                    </div>
-                    @enderror
+                <div class="form-group">
+                  <label for="_name">Name</label>
+                  <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="_name" value="{{ old('name') }}">
+                  @error('name')
+                  <div class="alert alert-danger" role="alert">
+                    {{ $message }}
                   </div>
-                  <div class="col-lg-6 col-md-6">
-                    <label for="_password_confirmation">Password Confirmation</label>
-                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="_password_confirmation"
-                           value="{{ old('password_confirmation')}}">
-                    @error('password_confirmation')
-                    <div class="alert alert-danger" role="alert">
-                      {{ $message }}
-                    </div>
-                    @enderror
-                  </div>
+                  @enderror
                 </div>
                 <hr>
                 <div class="form-group row">
@@ -108,7 +104,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <a href="{{ route('user.index')}}" class="btn btn-outline-light">Cancel</a>
+            <a href="{{ route('supplier.index')}}" class="btn btn-outline-light">Cancel</a>
             <button type="submit" class="btn btn-primary float-right">Save</button>
           </div>
         </form>
@@ -120,14 +116,6 @@
 @section('addJs')
   <script>
     $(function () {
-      $('.datatable').DataTable({
-        'fixedHeader': true,
-        'responsive': true,
-        'searching': false,
-        "bLengthChange": false,
-        scrollY: 220,
-      });
-
       $('#_image').change(function () {
         changeImage(this);
       });
@@ -137,7 +125,6 @@
         if (input.files && input.files[0]) {
           reader = new FileReader();
           reader.onload = function (e) {
-            //$('#my_dropzone').remove();
             $('#show_image').attr('src', e.target.result);
           }
           reader.readAsDataURL(input.files[0]);

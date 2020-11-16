@@ -7,7 +7,7 @@
         <nav class="navbar col-12">
           <div class="dropdown mr-auto d-flex d-sm-none">
             <button class="btn dropdown-toggle btn-sm btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dashboard
+              User
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item {{ request()->is(['user']) ? 'active' : '' }}" href="{{ route('user.index') }}">Index</a>
@@ -42,7 +42,7 @@
           <div class="card-body">
             <div class="row justify-content-center">
               <div class="col-md-10 mx-auto">
-                <h5 class="m-0">Create New User</h5>
+                <h5 class="m-0">Edit User</h5>
                 <hr>
                 <div class="form-group row">
                   <div class="col-lg-12 col-md-12">
@@ -104,7 +104,7 @@
           </div>
           <div class="card-footer">
             <a href="{{ route('user.index')}}" class="btn btn-outline-light">Cancel</a>
-            <button type="submit" class="btn btn-primary float-right">Done</button>
+            <button type="submit" class="btn btn-primary float-right">Update</button>
           </div>
         </form>
       </div>

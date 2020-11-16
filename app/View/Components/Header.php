@@ -16,7 +16,11 @@ class Header extends Component
    */
   public function render()
   {
-    $image = Storage::url('users/'.Auth::user()->img);
+    if (Auth::user()->img) {
+      $image = Storage::url('users/'.Auth::user()->img);
+    } else {
+      $image = "assets/img/user3.png";
+    }
 
     $data = [
       'image' => $image

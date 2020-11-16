@@ -18,6 +18,7 @@ class CreateSubCategoriesTable extends Migration
       $table->bigInteger('category');
       $table->string('name');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

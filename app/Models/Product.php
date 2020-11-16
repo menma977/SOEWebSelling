@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Product
@@ -11,15 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer id
  * @property string img
  * @property string name
- * @property integer debit
- * @property integer credit
- * @property string description
  * @property integer sub_category
  * @property integer supplier
  */
 class Product extends Model
 {
-  use HasFactory;
+  use HasFactory, SoftDeletes;
 
   /**
    * The attributes that are mass assignable.
@@ -29,9 +27,6 @@ class Product extends Model
   protected $fillable = [
     'img',
     'name',
-    'debit',
-    'credit',
-    'description',
     'sub_category',
     'supplier',
   ];
