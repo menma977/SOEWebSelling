@@ -9,7 +9,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 
 class HomeController extends Controller
@@ -20,14 +19,13 @@ class HomeController extends Controller
    */
   public function index()
   {
-    $dataChart = Sell::where('debit', 0)->orderBy('created_at', 'asc')->get()->groupBy(function ($item) {
+    $dataChart = Sell::orderBy('created_at', 'asc')->get()->groupBy(function ($item) {
       return $item->product;
     })->map(function ($item) {
-      $item->type = 'bar';
       $item->label = Product::find($item[0]->product)->name;
-      $item->data = $item->sum('credit');
+      $item->data = $item->sum('debit') - $item->sum('credit');
       $item->backgroundColor = sprintf('#%06X', random_int(0, 0xFFFFFF));
-      $item->borderColor = $item->backgroundColor;
+      $item->progress = $item->sum('credit') / $item->sum('debit') * 100;
 
       return $item;
     });
@@ -35,8 +33,6 @@ class HomeController extends Controller
     $data = [
       'dataChart' => $dataChart,
     ];
-
-    dump($dataChart);
 
     return view('dashboard', $data);
   }
